@@ -43,6 +43,49 @@ app.post("/usuarios", async (req, res) => {
   }
 });
 
+
+app.post("/registrar", async (req, res) => {
+  try {
+    const { body } = req;
+    const [results] = await pool.query(
+      "INSERT INTO usuario (nome,idade, email, senha) VALUES (?,?,?,?)",
+      [body.nome, body.idade, body.email, body.senha]
+    );
+
+    const [usuarioCriado] = await pool.query(
+      "Select * from usuario WHERE idusuario=?",
+      results.insertId
+    );
+
+    return res.status(201).json(usuarioCriado);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { body } = req;
+
+    const [usuario] = await pool.query(
+      "Select * from usuario WHERE email=? and senha=?",
+      [body.email, body.senha]
+    );
+
+    if(usuario.length > 0 ){
+      return res.status(200).json({
+        message:"Usuario logado",
+        dados: usuario
+      })
+    } else{
+      return res.status(404).send("Email ou senha errados!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 app.delete("/usuarios/:id", async (req, res) => {
   try {
     const { id } = req.params;
