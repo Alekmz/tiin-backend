@@ -118,7 +118,15 @@ app.post("/login", async (req, res) => {
 
 // LOGS
 app.get("/logs", async (req, res) => {
-  const [results] = await pool.query("SELECT * FROM lgs");
+  const { query } = req;
+  const pagina = Number(query.pagina) - 1
+  const quantidade = Number(query.quantidade)
+  const offset = pagina * quantidade
+
+  const [results] = await pool.query(`
+    SELECT * FROM lgs LIMIT ?
+    OFFSET ?;
+    `, [quantidade, offset]);
   res.send(results);
 });
 
