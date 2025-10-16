@@ -87,7 +87,7 @@ app.post("/registrar", async (req, res) => {
     );
 
     const [usuarioCriado] = await pool.query(
-      "Select * from usuario WHERE idusuario=?",
+      "Select * from usuario WHERE id=?",
       results.insertId
     );
 
@@ -134,6 +134,7 @@ app.get("/logs", async (req, res) => {
   res.send(results);
 });
 
+// Cadastro de logs
 app.post("/logs", async (req, res) => {
   try {
     const { body } = req;
