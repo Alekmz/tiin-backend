@@ -36,6 +36,13 @@ insert into devhub.like(log_id, user_id) values (1,1);
 
 insert into devhub.usuario (nome, email, senha, idade) values("Alex", "a@gmail.com", "123", 22)
 
+CREATE TABLE `devhub`.`comment` (
+  `log_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `mesage` VARCHAR(255) NULL,
+  CONSTRAINT `fk_log_comment` FOREIGN KEY (`log_id`) REFERENCES `lgs` (`id`),
+  CONSTRAINT `fk_user_comment` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`idusuario`));
+
 USE devhub;
 INSERT INTO lgs (categoria, horas_trabalhadas, linhas_codigo, bugs_corrigidos) VALUES ('Desenvolvimento de Gameplay', 22, 1850, 2);
 INSERT INTO lgs (categoria, horas_trabalhadas, linhas_codigo, bugs_corrigidos) VALUES ('Arte e Design', 30, 45, 0);

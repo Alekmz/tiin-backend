@@ -129,26 +129,24 @@ app.get("/logs", async (req, res) => {
 
   const [results] = await pool.query(
     `
-      SELECT
+    SELECT
       lgs.id,
-        lgs.categoria,
-        lgs.horas_trabalhadas,
-        lgs.linhas_codigo,
-        lgs.bugs_corrigidos,
-      COUNT(devhub.like.log_id) as likes
-    FROM
-      devhub.lgs 
-    left JOIN devhub.like
-    ON devhub.like.log_id = devhub.lgs.id
-    GROUP BY
-    lgs.id,
       lgs.categoria,
       lgs.horas_trabalhadas,
       lgs.linhas_codigo,
-      lgs.bugs_corrigidos 
-    ORDER BY devhub.lgs.id asc
-      LIMIT ?
-      OFFSET ?
+      lgs.bugs_corrigidos,
+    (SELECT COUNT(*) 
+    FROM devhub.like 
+    WHERE devhub.like.log_id = lgs.id) as likes,
+    (SELECT COUNT(*) 
+    FROM devhub.comment 
+    WHERE devhub.comment.log_id = lgs.id) as qnt_comments
+    FROM
+      devhub.lgs 
+    ORDER BY
+      lgs.id asc
+    LIMIT ?
+    OFFSET ?
     ;     `,
     [quantidade, offset]
   );
