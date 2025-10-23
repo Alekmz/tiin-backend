@@ -97,7 +97,7 @@ app.post("/registrar", async (req, res) => {
   }
 });
 
-/* LOGIN */
+/* LOGIN */ 
 app.post("/login", async (req, res) => {
   try {
     const { body } = req;
